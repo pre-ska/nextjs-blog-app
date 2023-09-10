@@ -4,14 +4,21 @@ import { useState } from "react";
 import Image from "next/image";
 import "react-quill/dist/quill.bubble.css";
 import ReactQuill from "react-quill";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import styles from "./writePage.module.css";
 
 const WritePage = () => {
-  const status = "unauthenticated";
+  const { status } = useSession();
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
+  const [file, setFile] = useState(null);
+  const [media, setMedia] = useState("");
   const [value, setValue] = useState("");
+  const [title, setTitle] = useState("");
+  const [catSlug, setCatSlug] = useState("");
 
   if (status === "loading") {
     return <div className={styles.loading}>Loading...</div>;
