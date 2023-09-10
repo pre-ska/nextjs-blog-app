@@ -1,6 +1,7 @@
 import Menu from "@/components/Menu/Menu";
 import styles from "./singlePage.module.css";
 import Image from "next/image";
+import Comments from "@/components/comments/Comments";
 
 const SinglePage = async ({ params }) => {
   const { slug } = params;
@@ -62,6 +63,9 @@ const SinglePage = async ({ params }) => {
               saepe non dolore. Necessitatibus nostrum, quasi tempora atque
               temporibus dolorem illo laborum obcaecati.
             </p>
+          </div>
+          <div className={styles.comment}>
+            <Comments postSlug={slug} />
           </div>
         </div>
         <Menu />
