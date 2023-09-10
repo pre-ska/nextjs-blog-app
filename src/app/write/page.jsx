@@ -8,7 +8,7 @@ import ReactQuill from "react-quill";
 import styles from "./writePage.module.css";
 
 const WritePage = () => {
-  const status = "notauthenticated";
+  const status = "unauthenticated";
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
