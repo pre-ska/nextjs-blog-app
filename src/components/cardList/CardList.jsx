@@ -9,6 +9,9 @@ const CardList = async ({ page, cat }) => {
       <h1 className={styles.title}>Recent posts</h1>
       <div className={styles.posts}>
         <Card />
+        <Card />
+
+        <Card />
       </div>
       cards list
       <Pagination />
