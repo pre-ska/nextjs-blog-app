@@ -27,6 +27,8 @@ export const GET = async (req) => {
 
 // CREATE A COMMENT
 export const POST = async (req) => {
+  // ! za kreiranje commenta trebam usera koji je logiran - server side authentifikacija
+  // ! zato sam u /utils/auth exportirao getAuthSession()
   const session = await getAuthSession();
 
   if (!session) {

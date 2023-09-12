@@ -1,5 +1,6 @@
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import { getServerSession } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import prisma from "./connect";
@@ -18,4 +19,5 @@ export const authOptions = {
   ],
 };
 
+// server side session
 export const getAuthSession = () => getServerSession(authOptions);

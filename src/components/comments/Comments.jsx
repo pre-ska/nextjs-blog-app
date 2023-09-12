@@ -1,19 +1,48 @@
 "use client";
 
-import Link from "next/link";
-import styles from "./comments.module.css";
 import { useState } from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import useSWR from "swr";
+
+import styles from "./comments.module.css";
+
+const fetcher = async (url) => {
+  const res = await fetch(url);
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    const error = new Error(data.message);
+    throw error;
+  }
+
+  return data;
+};
 
 const Comments = ({ postSlug }) => {
-  const status = "authenticated";
+  const { status } = useSession();
+
+  const { data, mutate, isLoading } = useSWR(
+    `http://localhost:3000/api/comments?postSlug=${postSlug}`,
+    fetcher
+  );
+
+  // ! ovo je state za comment - glup naziv desc, jer je u bazi model napravljen tako
   const [desc, setDesc] = useState("");
+
+  const handleSubmit = async () => {
+    await fetch("/api/comments", {
+      method: "POST",
+      body: JSON.stringify({ desc, postSlug }),
+    });
+    mutate(); // ! mutate() - refresh data nakon postanja - metoda iz SWR - slično revalidatePath u Nextu
+  };
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Comments</h1>
-
-      {/* // ! input comment */}
       {status === "authenticated" ? (
         <div className={styles.write}>
           <textarea
@@ -21,106 +50,36 @@ const Comments = ({ postSlug }) => {
             className={styles.input}
             onChange={(e) => setDesc(e.target.value)}
           />
-          <button className={styles.button}>Send</button>
+          <button className={styles.button} onClick={handleSubmit}>
+            Send
+          </button>
         </div>
       ) : (
         <Link href="/login">Login to write a comment</Link>
       )}
-
-      {/* // ! comments */}
-
       <div className={styles.comments}>
-        <div className={styles.comment}>
-          <div className={styles.user}>
-            <Image
-              src="/p1.jpeg"
-              alt=""
-              width={50}
-              height={50}
-              className={styles.image}
-            />
-
-            <div className={styles.userInfo}>
-              <span className={styles.username}>John Doe</span>
-              <span className={styles.date}>01.01.2024</span>
-            </div>
-          </div>
-          <p className={styles.desc}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Necessitatibus ex voluptates quidem amet incidunt provident corporis
-            delectus aperiam quas corrupti cum quae obcaecati libero perferendis
-            aliquid, molestias earum consectetur autem!
-          </p>
-        </div>
-
-        <div className={styles.comment}>
-          <div className={styles.user}>
-            <Image
-              src="/p1.jpeg"
-              alt=""
-              width={50}
-              height={50}
-              className={styles.image}
-            />
-
-            <div className={styles.userInfo}>
-              <span className={styles.username}>John Doe</span>
-              <span className={styles.date}>01.01.2024</span>
-            </div>
-          </div>
-          <p className={styles.desc}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Necessitatibus ex voluptates quidem amet incidunt provident corporis
-            delectus aperiam quas corrupti cum quae obcaecati libero perferendis
-            aliquid, molestias earum consectetur autem!
-          </p>
-        </div>
-
-        <div className={styles.comment}>
-          <div className={styles.user}>
-            <Image
-              src="/p1.jpeg"
-              alt=""
-              width={50}
-              height={50}
-              className={styles.image}
-            />
-
-            <div className={styles.userInfo}>
-              <span className={styles.username}>John Doe</span>
-              <span className={styles.date}>01.01.2024</span>
-            </div>
-          </div>
-          <p className={styles.desc}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Necessitatibus ex voluptates quidem amet incidunt provident corporis
-            delectus aperiam quas corrupti cum quae obcaecati libero perferendis
-            aliquid, molestias earum consectetur autem!
-          </p>
-        </div>
-
-        <div className={styles.comment}>
-          <div className={styles.user}>
-            <Image
-              src="/p1.jpeg"
-              alt=""
-              width={50}
-              height={50}
-              className={styles.image}
-            />
-
-            <div className={styles.userInfo}>
-              <span className={styles.username}>John Doe</span>
-              <span className={styles.date}>01.01.2024</span>
-            </div>
-          </div>
-          <p className={styles.desc}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Necessitatibus ex voluptates quidem amet incidunt provident corporis
-            delectus aperiam quas corrupti cum quae obcaecati libero perferendis
-            aliquid, molestias earum consectetur autem!
-          </p>
-        </div>
+        {isLoading
+          ? "loading"
+          : data?.map((item) => (
+              <div className={styles.comment} key={item.id}>
+                <div className={styles.user}>
+                  {item?.user?.image && (
+                    <Image
+                      src={item.user.image}
+                      alt=""
+                      width={50}
+                      height={50}
+                      className={styles.image}
+                    />
+                  )}
+                  <div className={styles.userInfo}>
+                    <span className={styles.username}>{item.user.name}</span>
+                    <span className={styles.date}>{item.createdAt}</span>
+                  </div>
+                </div>
+                <p className={styles.desc}>{item.desc}</p>
+              </div>
+            ))}
       </div>
     </div>
   );
