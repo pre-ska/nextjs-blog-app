@@ -7,6 +7,7 @@ import Image from "next/image";
 import useSWR from "swr";
 
 import styles from "./comments.module.css";
+import { formatDate } from "@/utils/misc";
 
 const fetcher = async (url) => {
   const res = await fetch(url);
@@ -37,6 +38,7 @@ const Comments = ({ postSlug }) => {
       method: "POST",
       body: JSON.stringify({ desc, postSlug }),
     });
+    setDesc("");
     mutate(); // ! mutate() - refresh data nakon postanja - metoda iz SWR - slično revalidatePath u Nextu
   };
 
@@ -48,6 +50,7 @@ const Comments = ({ postSlug }) => {
           <textarea
             placeholder="write a comment..."
             className={styles.input}
+            value={desc}
             onChange={(e) => setDesc(e.target.value)}
           />
           <button className={styles.button} onClick={handleSubmit}>
@@ -74,7 +77,9 @@ const Comments = ({ postSlug }) => {
                   )}
                   <div className={styles.userInfo}>
                     <span className={styles.username}>{item.user.name}</span>
-                    <span className={styles.date}>{item.createdAt}</span>
+                    <span className={styles.date}>
+                      {formatDate(item?.createdAt)}
+                    </span>
                   </div>
                 </div>
                 <p className={styles.desc}>{item.desc}</p>

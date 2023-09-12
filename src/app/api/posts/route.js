@@ -2,7 +2,7 @@ import { getAuthSession } from "@/utils/auth";
 import prisma from "@/utils/connect";
 import { NextResponse } from "next/server";
 
-const POST_PER_PAGE = 2;
+export const POST_PER_PAGE = 4;
 
 export const GET = async (req) => {
   const { searchParams } = new URL(req.url);
@@ -37,6 +37,7 @@ export const GET = async (req) => {
 
 // CREATE A POST
 export const POST = async (req) => {
+  // ! za kreiranje posta trebam logiranog usera - server side check
   const session = await getAuthSession();
 
   if (!session) {

@@ -3,8 +3,7 @@ import React from "react";
 import styles from "./cardList.module.css";
 import Pagination from "../pagination/Pagination";
 import Card from "../card/Card";
-
-const POST_PER_PAGE = 2;
+import { POST_PER_PAGE } from "@/app/api/posts/route";
 
 const getData = async (page, cat) => {
   const res = await fetch(

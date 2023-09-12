@@ -2,6 +2,7 @@ import Menu from "@/components/Menu/Menu";
 import styles from "./singlePage.module.css";
 import Image from "next/image";
 import Comments from "@/components/comments/Comments";
+import { formatDate } from "@/utils/misc";
 
 const getData = async (slug) => {
   const res = await fetch(`http://localhost:3000/api/posts/${slug}`, {
@@ -38,7 +39,10 @@ const SinglePage = async ({ params }) => {
             )}
             <div className={styles.userTextContainer}>
               <span className={styles.username}>{data?.user?.name}</span>
-              <span className={styles.date}>01.01.2024</span>
+              <span className={styles.date}>
+                {/* {data?.createdAt.substring(0, 10)} */}
+                {formatDate(data?.createdAt)}
+              </span>
             </div>
           </div>
         </div>
@@ -52,8 +56,9 @@ const SinglePage = async ({ params }) => {
         <div className={styles.post}>
           <div
             className={styles.description}
-            dangerouslySetInnerHTML={{ __html: data?.desc }}
+            dangerouslySetInnerHTML={{ __html: data?.desc || "" }}
           />
+          <div>views: {data?.views}</div>
           <div className={styles.comment}>
             <Comments postSlug={slug} />
           </div>
