@@ -5,10 +5,15 @@ import { NextResponse } from "next/server";
 export const GET = async (req, { params }) => {
   const { slug } = params;
 
+  if (!slug) {
+    return new NextResponse(
+      JSON.stringify({ message: "No slug provided!" }, { status: 400 })
+    );
+  }
+
   try {
-    const post = await prisma.post.update({
+    const post = await prisma.post.findUnique({
       where: { slug },
-      data: { views: { increment: 1 } },
       include: { user: true },
     });
 

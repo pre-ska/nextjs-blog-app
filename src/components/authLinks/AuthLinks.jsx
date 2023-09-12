@@ -9,7 +9,7 @@ import styles from "./authLinks.module.css";
 const AuthLinks = () => {
   const { status } = useSession();
   const [open, setOpen] = useState(false);
-  console.log(status);
+
   return (
     <>
       {status === "unauthenticated" ? (
