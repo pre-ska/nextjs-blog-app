@@ -39,18 +39,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-const aa = {
-  web: {
-    client_id:
-      "942982069345-0knoou4eadj0noi44jhimb7tgvpf4ceu.apps.googleusercontent.com",
-    project_id: "nextjs-shop-398408",
-    auth_uri: "https://accounts.google.com/o/oauth2/auth",
-    token_uri: "https://oauth2.googleapis.com/token",
-    auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-    client_secret: "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",
-    redirect_uris: [
-      "https://nextjs-shop-teal.vercel.app/api/auth/callback/google",
-      "http://localhost:3000/api/auth/callback/google",
-    ],
-  },
-};
