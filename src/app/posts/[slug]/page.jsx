@@ -5,7 +5,7 @@ import Comments from "@/components/comments/Comments";
 import { formatDate } from "@/utils/misc";
 
 const getData = async (slug) => {
-  const res = await fetch(`http://localhost:3000/api/posts/${slug}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/${slug}`, {
     cache: "no-store",
   });
 
